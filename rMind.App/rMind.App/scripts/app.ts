@@ -1,6 +1,6 @@
 ﻿import { Engine } from './engine/engine.js'
 
-const canvas = document.getElementById("canvas") as HTMLCanvasElement;
+const container = document.getElementById("content") as HTMLElement;
 
-const obj = new Engine(canvas);
+const obj = new Engine(container);
 obj.draw();

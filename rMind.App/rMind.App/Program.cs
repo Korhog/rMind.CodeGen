@@ -1,5 +1,10 @@
+using rMind.App;
 
-var builder = WebApplication.CreateBuilder(args);
+var builder = WebApplication.CreateBuilder (args);
+builder.Host.ConfigureWebHostDefaults(host =>
+{
+    host.UseStartup<Startup>();
+});
 
 var app = builder.Build();
 

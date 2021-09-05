@@ -1,5 +1,6 @@
-﻿import { Vector2D } from '../types.js'
-import { INodeController} from './nodeController.js'
+﻿import { CornerRadius, Vector2D } from '../types.js'
+import { INodeController } from './nodeController.js'
+import * as render from '../render/render.js'
 
 export enum InteractiveNodeType {
     Node,
@@ -22,7 +23,7 @@ export interface INode extends IDrawningNode {
     translate(x: number, y: number): void;
 }
 
-export abstract class Node implements INode, IInteractiveNode {
+export class Node implements INode, IInteractiveNode {
     position: Vector2D;
     parent: INodeController;
     nodeType: InteractiveNodeType;
@@ -32,7 +33,18 @@ export abstract class Node implements INode, IInteractiveNode {
     }
    
     draw(ctx: CanvasRenderingContext2D): void {
-        throw new Error('Method not implemented.');
+        ctx.save();
+
+        ctx.shadowColor = '#00000033';
+        ctx.shadowBlur = 6;
+        ctx.shadowOffsetY = 3;
+
+        let rect = new DOMRect(100, 100, 200, 100);
+        let cr = new CornerRadius(3, 3, 3, 3);
+        render.drawRect(ctx, rect, '#1d1d1d', cr, 2);
+        render.drawRect(ctx, rect, '#1d1d1d', cr);
+
+        ctx.restore();
     }  
 
     overed(x: number, y: number): IInteractiveNode {
