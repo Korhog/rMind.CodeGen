@@ -20,6 +20,7 @@ app.UseEndpoints(endpoints =>
     endpoints.MapControllers();
 });
 
+app.MapRazorPages();
 app.UseDefaultFiles();
 app.UseStaticFiles();
 

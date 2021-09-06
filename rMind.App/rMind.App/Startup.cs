@@ -19,6 +19,8 @@ public class Startup
     public void ConfigureServices(IServiceCollection services)
     {
         services.Configure<KestrelServerOptions>(_configuration.GetSection("Kestrel"));
+        services.AddRazorPages();
         services.AddControllers();
+
     }
 }
