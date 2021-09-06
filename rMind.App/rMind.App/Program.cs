@@ -13,6 +13,13 @@ if (app.Environment.IsDevelopment())
     app.UseDeveloperExceptionPage();
 }
 
+app.UseHttpsRedirection();
+app.UseRouting();
+app.UseEndpoints(endpoints =>
+{
+    endpoints.MapControllers();
+});
+
 app.UseDefaultFiles();
 app.UseStaticFiles();
 

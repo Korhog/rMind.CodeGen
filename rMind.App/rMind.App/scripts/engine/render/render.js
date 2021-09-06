@@ -63,3 +63,18 @@ export function drawRect(ctx, rect, style, cornerRadius, offset = 0) {
     }
     ctx.fillRect(rect.x - offset, rect.y - offset, rect.width + offset + offset, rect.height + offset + offset);
 }
+export function drawCurve(ctx, p1, p2) {
+    const leftToRight = p1.x <= p2.x;
+    ctx.strokeStyle = 'rgba(0,255,125,0.75)';
+    ctx.lineWidth = 10;
+    ctx.beginPath();
+    ctx.moveTo(p1.x, p1.y);
+    const w = Math.abs(p1.x - p2.x) / 3;
+    if (leftToRight) {
+        ctx.bezierCurveTo(p1.x + w, p1.y, p2.x - w, p2.y, p2.x, p2.y);
+    }
+    else {
+        ctx.bezierCurveTo(p1.x - w, p1.y, p2.x + w, p2.y, p2.x, p2.y);
+    }
+    ctx.stroke();
+}

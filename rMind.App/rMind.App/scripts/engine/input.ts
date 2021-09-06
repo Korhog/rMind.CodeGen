@@ -1,5 +1,6 @@
 ﻿import { Vector2D } from './types.js';
-import { INode, Node } from './nodes/node.js';
+import { Node, IInteractiveNode, InteractiveNodeType } from './nodes/node.js';
+import { Pin } from './nodes/pins/pin.js';
 import { Event } from './events/event.js'
 
 export enum MouseAction {
@@ -13,9 +14,9 @@ export class MouseState {
     action: MouseAction;
     startPos: Vector2D;
     startMousePos: Vector2D;
-    node: INode;
+    node: Node;
+    pin: Pin;
 
-    n: Node;
     constructor() {
         this.action = MouseAction.None;
     }
@@ -30,14 +31,18 @@ export class MouseEventArgs {
 }
 
 export class InputSystem {
-    private _ctx: CanvasRenderingContext2D;
     private _rect: DOMRect | ClientRect;
+
     protected _mouseState: MouseState;
+    get state(): MouseState { return this._mouseState; }
 
     onMouseDown: Event<Vector2D>;
     onMouseMove: Event<Vector2D>;
     onMouseUp: Event<MouseEventArgs>;
-    onScroll: Event<Vector2D>;
+    onWire: Event<Vector2D>;
+
+    onScroll: Event<void>;
+    onDrag: Event<void>;
 
     offset: Vector2D;
     scale: number;
@@ -55,15 +60,35 @@ export class InputSystem {
         this.onMouseDown = new Event<Vector2D>();
         this.onMouseUp = new Event<MouseEventArgs>();
         this.onMouseMove = new Event<Vector2D>();
-        this.onScroll = new Event<Vector2D>();
+        this.onWire = new Event<Vector2D>();
+        this.onScroll = new Event<void>();
+        this.onDrag = new Event<void>();
     }
 
     setRect(rect: DOMRect) {
         this._rect = rect;
     }
 
-    grab(node: INode) {
+    grab(interactiveNode: IInteractiveNode, pos: Vector2D) {
+        if (interactiveNode) {
+            if (interactiveNode.nodeType === InteractiveNodeType.Node) {
+                const n = interactiveNode as Node;
+                if (n) {
+                    this._mouseState.startMousePos = pos;
+                    this._mouseState.action = MouseAction.Drag;
+                    this._mouseState.node = n;
+                }
+            }
 
+            if (interactiveNode.nodeType === InteractiveNodeType.Pin) {
+                const n = interactiveNode as Pin;
+                if (n) {
+                    this._mouseState.startMousePos = n.center;
+                    this._mouseState.action = MouseAction.Wire;
+                    this._mouseState.pin = n;
+                }
+            }
+        }
     }
 
     protected onMouseMoveHandler(event: MouseEvent) {
@@ -75,7 +100,22 @@ export class InputSystem {
             const dy = event.clientY - this._rect.top - this._mouseState.startMousePos.y;
 
             this.offset = new Vector2D(dx, dy);
-            this.onScroll.emit(new Vector2D(dx, dy));
+            this.onScroll.emit();
+            return;
+        }
+
+        if (this._mouseState.action === MouseAction.Drag) {
+            const dx = x - this._mouseState.startMousePos.x;
+            const dy = y - this._mouseState.startMousePos.y;
+
+            this._mouseState.node.translate(dx, dy);
+            this._mouseState.startMousePos = new Vector2D(x, y);
+            this.onDrag.emit();
+            return;
+        }
+
+        if (this._mouseState.action === MouseAction.Wire) {
+            this.onWire.emit(new Vector2D(x, y));
             return;
         }
 
@@ -103,5 +143,6 @@ export class InputSystem {
 
         this.onMouseUp.emit(new MouseEventArgs(this._mouseState.action));
         this._mouseState.action = MouseAction.None;
+        this._mouseState.node = null;
     }    
 }

@@ -95,3 +95,24 @@ export function drawRect(ctx: CanvasRenderingContext2D, rect: DOMRect, style: st
         rect.height + offset + offset
     );
 }
+
+export function drawCurve(ctx: CanvasRenderingContext2D, p1: Vector2D, p2: Vector2D): void {
+    const leftToRight = p1.x <= p2.x;
+
+    ctx.strokeStyle = 'rgba(0,255,125,0.75)';
+    ctx.lineWidth = 10;
+
+    ctx.beginPath();
+    ctx.moveTo(p1.x, p1.y);
+
+    const w = Math.abs(p1.x - p2.x) / 3;
+
+    if (leftToRight) {
+        ctx.bezierCurveTo(p1.x + w, p1.y, p2.x - w, p2.y, p2.x, p2.y);
+    }
+    else {
+        ctx.bezierCurveTo(p1.x - w, p1.y, p2.x + w, p2.y, p2.x, p2.y);
+    }
+
+    ctx.stroke();
+}
