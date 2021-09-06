@@ -24,12 +24,16 @@ export class InputSystem {
         document.addEventListener("mousedown", this.onMouseDownHandler.bind(this));
         document.addEventListener("mouseup", this.onMouseUpHandler.bind(this));
         this.offset = new Vector2D();
+        this.scale = 1;
         this.onMouseDown = new Event();
         this.onMouseUp = new Event();
+        this.onMouseMove = new Event();
         this.onScroll = new Event();
     }
     setRect(rect) {
         this._rect = rect;
+    }
+    grab(node) {
     }
     onMouseMoveHandler(event) {
         const x = event.clientX - this._rect.left - this.offset.x;
@@ -41,6 +45,7 @@ export class InputSystem {
             this.onScroll.emit(new Vector2D(dx, dy));
             return;
         }
+        this.onMouseMove.emit(new Vector2D(x, y));
     }
     onMouseDownHandler(event) {
         const x = event.clientX - this._rect.left - this.offset.x;

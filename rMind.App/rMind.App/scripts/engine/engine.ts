@@ -1,7 +1,7 @@
 ﻿import * as render from './render/render.js';
 import { InputSystem } from './input.js';
-import { Vector2D } from './types.js';
 import { Node } from './nodes/node.js'
+import { NodeController, INodeController } from './nodes/nodeController.js';
 
 export class Engine {
     private _canvas: HTMLCanvasElement;
@@ -12,14 +12,18 @@ export class Engine {
 
     private _inputSystem: InputSystem;
     private _rect: DOMRect | ClientRect;
-    private _node: Node;
+    private _rootController: INodeController;
         
     constructor(container: HTMLElement) {
         this._inputSystem = new InputSystem();
         this._inputSystem.onMouseDown.on((pos) => console.log(pos));
-        this._inputSystem.onScroll.on((pos) => {
+
+        this._inputSystem.onMouseMove.on((pos) => {
+            this._rootController.getNodeByPosition(pos.x, pos.y)
             this.draw();
         });
+
+        this._inputSystem.onScroll.on(() => { this.draw(); })
 
         this._canvasBG = this.createCanvas(container);
         this._ctxBG = this._canvasBG.getContext("2d");
@@ -33,19 +37,23 @@ export class Engine {
         this._rect = this._canvas.getBoundingClientRect();
         this._inputSystem.setRect(this._rect);
 
-        // To Delete
-        this._node = new Node();
+        this._rootController = new NodeController(this);
+        this._rootController.create(Node, 100, 100, {});
+
+        this.resize();
     }
 
-    draw() {
+    draw() {       
         this.clear();
-
         render.drawGrid(this._ctxBG, this._inputSystem.offset);
 
+        //this._ctx.save();
         this._ctx.setTransform();
         this._ctx.translate(this._inputSystem.offset.x, this._inputSystem.offset.y);
+        this._ctx.scale(this._inputSystem.scale, this._inputSystem.scale);
 
-        this._node.draw(this._ctx);
+        this._rootController.draw(this._ctx);
+        //this._ctx.restore();
     }
 
     resize() {

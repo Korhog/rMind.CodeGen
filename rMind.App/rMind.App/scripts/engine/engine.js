@@ -1,13 +1,16 @@
 import * as render from './render/render.js';
 import { InputSystem } from './input.js';
 import { Node } from './nodes/node.js';
+import { NodeController } from './nodes/nodeController.js';
 export class Engine {
     constructor(container) {
         this._inputSystem = new InputSystem();
         this._inputSystem.onMouseDown.on((pos) => console.log(pos));
-        this._inputSystem.onScroll.on((pos) => {
+        this._inputSystem.onMouseMove.on((pos) => {
+            this._rootController.getNodeByPosition(pos.x, pos.y);
             this.draw();
         });
+        this._inputSystem.onScroll.on(() => { this.draw(); });
         this._canvasBG = this.createCanvas(container);
         this._ctxBG = this._canvasBG.getContext("2d");
         this._canvas = this.createCanvas(container);
@@ -16,15 +19,19 @@ export class Engine {
         window.addEventListener('resize', this.resize.bind(this));
         this._rect = this._canvas.getBoundingClientRect();
         this._inputSystem.setRect(this._rect);
-        // To Delete
-        this._node = new Node();
+        this._rootController = new NodeController(this);
+        this._rootController.create(Node, 100, 100, {});
+        this.resize();
     }
     draw() {
         this.clear();
         render.drawGrid(this._ctxBG, this._inputSystem.offset);
+        //this._ctx.save();
         this._ctx.setTransform();
         this._ctx.translate(this._inputSystem.offset.x, this._inputSystem.offset.y);
-        this._node.draw(this._ctx);
+        this._ctx.scale(this._inputSystem.scale, this._inputSystem.scale);
+        this._rootController.draw(this._ctx);
+        //this._ctx.restore();
     }
     resize() {
         this._canvas.width = window.innerWidth - 40;

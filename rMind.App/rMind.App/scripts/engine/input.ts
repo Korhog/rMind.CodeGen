@@ -34,11 +34,13 @@ export class InputSystem {
     private _rect: DOMRect | ClientRect;
     protected _mouseState: MouseState;
 
-    onMouseDown: Event<Vector2D>;    
+    onMouseDown: Event<Vector2D>;
+    onMouseMove: Event<Vector2D>;
     onMouseUp: Event<MouseEventArgs>;
     onScroll: Event<Vector2D>;
 
     offset: Vector2D;
+    scale: number;
 
     constructor() {
         this._mouseState = new MouseState();
@@ -48,14 +50,20 @@ export class InputSystem {
         document.addEventListener("mouseup", this.onMouseUpHandler.bind(this));
 
         this.offset = new Vector2D();
+        this.scale = 1;
 
         this.onMouseDown = new Event<Vector2D>();
         this.onMouseUp = new Event<MouseEventArgs>();
+        this.onMouseMove = new Event<Vector2D>();
         this.onScroll = new Event<Vector2D>();
     }
 
     setRect(rect: DOMRect) {
         this._rect = rect;
+    }
+
+    grab(node: INode) {
+
     }
 
     protected onMouseMoveHandler(event: MouseEvent) {
@@ -70,6 +78,8 @@ export class InputSystem {
             this.onScroll.emit(new Vector2D(dx, dy));
             return;
         }
+
+        this.onMouseMove.emit(new Vector2D(x, y));
     }
 
     protected onMouseDownHandler(event: MouseEvent) {
@@ -91,7 +101,7 @@ export class InputSystem {
         const x = event.clientX - this._rect.left - this.offset.x;
         const y = event.clientY - this._rect.top - this.offset.y;
 
-        this.onMouseUp.emit(new MouseEventArgs(this._mouseState.action          ));
+        this.onMouseUp.emit(new MouseEventArgs(this._mouseState.action));
         this._mouseState.action = MouseAction.None;
     }    
 }
