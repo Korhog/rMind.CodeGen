@@ -1,10 +1,6 @@
 using rMind.App;
 
 var builder = WebApplication.CreateBuilder (args);
-builder.Host.ConfigureWebHostDefaults(builder =>
-{
-    builder.UseStartup<Startup>();
-});
 
 var app = builder.Build();
 
@@ -21,6 +17,7 @@ app.UseEndpoints(endpoints =>
 });
 
 app.MapRazorPages();
+app.UseStatusCodePages();
 app.UseDefaultFiles();
 app.UseStaticFiles();
 
