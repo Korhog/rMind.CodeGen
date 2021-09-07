@@ -6,6 +6,7 @@ import { RowNode } from './nodes/rowNode.js'
 import { NodeController, INodeController } from './nodes/nodeController.js';
 
 export class Engine {
+    private _container: HTMLElement;
     private _canvas: HTMLCanvasElement;
     private _canvasBG: HTMLCanvasElement;
 
@@ -17,6 +18,7 @@ export class Engine {
     private _rootController: INodeController;
         
     constructor(container: HTMLElement) {
+        this._container = container;
         this.createInputSystem();
 
         this._canvasBG = this.createCanvas(container);
@@ -59,11 +61,14 @@ export class Engine {
     }
 
     resize() {
-        this._canvas.width = window.innerWidth - 40;
-        this._canvas.height = window.innerHeight - 200;
+        const width = this._container.getBoundingClientRect().width;
+        const height = this._container.getBoundingClientRect().height;
 
-        this._canvasBG.width = window.innerWidth - 40;
-        this._canvasBG.height = window.innerHeight - 200;
+        this._canvas.width = width;
+        this._canvasBG.width = width;
+
+        this._canvas.height = height;
+        this._canvasBG.height = height;
 
         this._rect = this._canvas.getBoundingClientRect();
         this._inputSystem.setRect(this._rect);

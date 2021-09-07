@@ -4,6 +4,7 @@ import { RowNode } from './nodes/rowNode.js';
 import { NodeController } from './nodes/nodeController.js';
 export class Engine {
     constructor(container) {
+        this._container = container;
         this.createInputSystem();
         this._canvasBG = this.createCanvas(container);
         this._ctxBG = this._canvasBG.getContext("2d");
@@ -34,10 +35,12 @@ export class Engine {
         //this._ctx.restore();
     }
     resize() {
-        this._canvas.width = window.innerWidth - 40;
-        this._canvas.height = window.innerHeight - 200;
-        this._canvasBG.width = window.innerWidth - 40;
-        this._canvasBG.height = window.innerHeight - 200;
+        const width = this._container.getBoundingClientRect().width;
+        const height = this._container.getBoundingClientRect().height;
+        this._canvas.width = width;
+        this._canvasBG.width = width;
+        this._canvas.height = height;
+        this._canvasBG.height = height;
         this._rect = this._canvas.getBoundingClientRect();
         this._inputSystem.setRect(this._rect);
         this.draw();
