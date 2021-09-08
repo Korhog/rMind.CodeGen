@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 
 namespace rMind.App.pages;
 
-public class SchemeModel : PageModel
+public class SchemaModel : PageModel
 {
     public void OnGet()
     {
