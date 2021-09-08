@@ -1,5 +1,7 @@
 ﻿import { Vector2D } from "../../types.js";
 import { INode, IInteractiveNode, IDrawningNode, InteractiveNodeType } from "../node.js";
+import { Wire } from '../wire/wire.js'
+
 
 export enum PinDirection {
     None,
@@ -26,7 +28,12 @@ export class Pin implements IInteractiveNode, IDrawningNode {
         );
     }
 
-    center: Vector2D;
+    protected _wires: Array<Wire>;
+    get wires(): Array<Wire> { return this._wires; }
+
+
+    _center: Vector2D;
+    get center(): Vector2D { return this._center; }
 
     constructor(parent: INode, direction?: PinDirection) {
         this.rowSpan = 1;
@@ -34,7 +41,8 @@ export class Pin implements IInteractiveNode, IDrawningNode {
         this.pinDirection = direction || PinDirection.None;
         this._parent = parent;
         this._rect = new DOMRect();
-        this.center = new Vector2D();
+        this._center = new Vector2D();
+        this._wires = new Array<Wire>();
     }
 
     overed(x: number, y: number): IInteractiveNode | null {
@@ -90,5 +98,30 @@ export class Pin implements IInteractiveNode, IDrawningNode {
 
     unselect(): void {
         this._isOvered = false; // this.isConnected;
+    }
+
+    validateConnection(node: Pin): boolean {
+        // DEBUG: check single connection
+        if (this._wires.length > 0) {
+            return false;
+        }
+
+        if (node.parent === this.parent) {
+            return false;
+        }
+
+        return true;
+    }
+
+    connect(wire: Wire): boolean {
+        this._wires.push(wire);
+        return true;
+    }
+
+    disconnect(wire: Wire): void {
+        const index = this._wires.indexOf(wire, 0);
+        if (index > -1) {
+            this._wires.splice(index, 1);
+        }
     }
 }

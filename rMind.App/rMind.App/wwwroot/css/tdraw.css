@@ -2,10 +2,26 @@
     position: absolute;
 }
 
+.app-view {
+    display: grid;
+    height: 100vh;
+    grid-template-rows: 56px auto 40px; /* 3 строки */
+}
+
+.app-view .app-view-nav {
+    z-index: 3
+}
+
+.app-view .app-view-content {
+    z-index: 1
+}
+
 .schema-view {
-    position: fixed;
-    top: 57px;
-    bottom: 0px;
-    left: 0px;
-    right: 0px;
+    position: relative;
+    height: 100%;
+}
+
+.schema-container {
+    position: relative;
+    height: 100%;
 }

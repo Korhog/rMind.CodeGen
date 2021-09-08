@@ -1,5 +1,6 @@
 import * as render from './render/render.js';
-import { InputSystem } from './input.js';
+import { InputSystem, MouseAction } from './input.js';
+import { InteractiveNodeType } from './nodes/node.js';
 import { RowNode } from './nodes/rowNode.js';
 import { NodeController } from './nodes/nodeController.js';
 export class Engine {
@@ -50,6 +51,12 @@ export class Engine {
         this._ctxBG.fillRect(0, 0, this._canvasBG.width, this._canvasBG.height);
         this._ctx.clearRect(-this._inputSystem.offset.x - 5, -this._inputSystem.offset.y - 5, this._canvas.width + 10, this._canvas.height + 10);
     }
+    create() {
+        const node = this._rootController.create(RowNode, 150, 150, {});
+        node.addRow();
+        node.addRow();
+        node.addRow();
+    }
     createCanvas(container) {
         const canvas = document.createElement('canvas');
         canvas.className = "canva";
@@ -64,9 +71,11 @@ export class Engine {
             this.draw();
         });
         this._inputSystem.onWire.on((pos) => {
+            this._rootController.getNodeByPosition(pos.x, pos.y);
             this.draw();
             render.drawCurve(this._ctx, this._inputSystem.state.startMousePos, pos);
         });
+        this._inputSystem.onMouseUp.on(this.onMouseUp.bind(this));
         this._inputSystem.onScroll.on(() => { this.draw(); });
         this._inputSystem.onDrag.on(() => { this.draw(); });
         this._inputSystem.setRect(this._rect);
@@ -75,6 +84,18 @@ export class Engine {
         let interactiveNode = this._rootController.getNodeByPosition(pos.x, pos.y);
         if (interactiveNode) {
             this._inputSystem.grab(interactiveNode, pos);
+        }
+    }
+    onMouseUp(args) {
+        if (args.action == MouseAction.Wire) {
+            let interactiveNode = this._rootController.getNodeByPosition(args.position.x, args.position.y);
+            if (interactiveNode && interactiveNode.nodeType == InteractiveNodeType.Pin) {
+                const pin = interactiveNode;
+                if (pin) {
+                    this._rootController.createWire(this._inputSystem.state.pin, pin);
+                    this.draw();
+                }
+            }
         }
     }
 }

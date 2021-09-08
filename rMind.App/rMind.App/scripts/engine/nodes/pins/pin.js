@@ -14,12 +14,15 @@ export class Pin {
         this.pinDirection = direction || PinDirection.None;
         this._parent = parent;
         this._rect = new DOMRect();
-        this.center = new Vector2D();
+        this._center = new Vector2D();
+        this._wires = new Array();
     }
     get parent() { return this._parent; }
     get position() {
         return new Vector2D(this._rect.x, this._rect.y);
     }
+    get wires() { return this._wires; }
+    get center() { return this._center; }
     overed(x, y) {
         if (x >= this._rect.x && x <= this._rect.x + this._rect.width) {
             if (y >= this._rect.y && y <= this._rect.y + this._rect.height) {
@@ -64,5 +67,25 @@ export class Pin {
     }
     unselect() {
         this._isOvered = false; // this.isConnected;
+    }
+    validateConnection(node) {
+        // DEBUG: check single connection
+        if (this._wires.length > 0) {
+            return false;
+        }
+        if (node.parent === this.parent) {
+            return false;
+        }
+        return true;
+    }
+    connect(wire) {
+        this._wires.push(wire);
+        return true;
+    }
+    disconnect(wire) {
+        const index = this._wires.indexOf(wire, 0);
+        if (index > -1) {
+            this._wires.splice(index, 1);
+        }
     }
 }

@@ -23,10 +23,15 @@ export class MouseState {
 }
 
 export class MouseEventArgs {
-    action: MouseAction;
+    _action: MouseAction;
+    get action(): MouseAction { return this._action; }
 
-    constructor(act: MouseAction) {
-        this.action = act;
+    _position: Vector2D;
+    get position(): Vector2D { return this._position; }
+
+    constructor(act: MouseAction, pos: Vector2D) {
+        this._action = act;
+        this._position = pos;
     }
 }
 
@@ -141,7 +146,10 @@ export class InputSystem {
         const x = event.clientX - this._rect.left - this.offset.x;
         const y = event.clientY - this._rect.top - this.offset.y;
 
-        this.onMouseUp.emit(new MouseEventArgs(this._mouseState.action));
+        this.onMouseUp.emit(new MouseEventArgs(
+            this._mouseState.action,
+            new Vector2D(x, y)));
+
         this._mouseState.action = MouseAction.None;
         this._mouseState.node = null;
     }    

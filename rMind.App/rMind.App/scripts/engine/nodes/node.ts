@@ -125,10 +125,6 @@ export class Node implements INode, IInteractiveNode {
     draw(ctx: CanvasRenderingContext2D): void {
         //ctx.save();
 
-        ctx.shadowColor = consts.SHADOW_COLOR;
-        ctx.shadowBlur = consts.SHADOW_BLUR;
-        ctx.shadowOffsetY = consts.SHADOW_OFFSET;
-
         let rect = this._rect;
 
         if (this._isMouseOver || this._isSelected) {
@@ -142,7 +138,13 @@ export class Node implements INode, IInteractiveNode {
             }
         }
 
+        ctx.shadowColor = consts.SHADOW_COLOR;
+        ctx.shadowBlur = consts.SHADOW_BLUR;
+        ctx.shadowOffsetY = consts.SHADOW_OFFSET;
+
         render.drawRect(ctx, rect, this._borderColor, this.cornerRadius, 2);
+        ctx.shadowColor = "transparent black";
+
         render.drawRect(ctx, rect, this._fill, this.cornerRadius);
 
         //ctx.restore();
