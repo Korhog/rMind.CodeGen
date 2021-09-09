@@ -4,8 +4,19 @@
 }
 
 <script type="module" src="scripts/app.js"></script>
-<div class="schema-container" id="schema-container">
-    <div class="schema-view" id="schema-view"></div>
-    <button type="button" class="btn btn-primary" id="add-button" style="position: absolute; top: 0px; margin: 8px;">Add</button>
+<div id="schema-editor" class="schema-editor full-flex">
+    <div id="editor-menu" class="editor-menu"></div>
+    <div id="inner-box" class="full-flex">
+        <div class="schema-view" id="schema-view"></div>
+        <div class="dropdown" style="position: absolute; top: 0px; margin: 8px;">
+          <button class="btn btn-secondary dropdown-toggle bi bi-node-plus" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true" style="position: absolute; top: 0px; margin: 8px;">
+          </button>
+          <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+            <a class="dropdown-item" id="add-button" href="#">Row container</a>
+            <a class="dropdown-item" href="#">Row container with header</a>
+          </div>
+        </div>
+    </div>
+     <div id="editor-r-menu" class="editor-r-menu"></div>
 </div>
 

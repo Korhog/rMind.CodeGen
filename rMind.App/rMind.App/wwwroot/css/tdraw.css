@@ -5,7 +5,7 @@
 .app-view {
     display: grid;
     height: 100vh;
-    grid-template-rows: 56px auto 40px; /* 3 строки */
+    grid-template-rows: 56px auto 25px; /* 3 строки */
 }
 
 .app-view .app-view-nav {
@@ -21,7 +21,30 @@
     height: 100%;
 }
 
-.schema-container {
+.schema-editor {
+    display:grid;
+    grid-template-columns: min-content auto min-content
+}
+
+.full-flex {
     position: relative;
     height: 100%;
+}
+
+.editor-r-menu {
+    width: 40px;
+    border-left: 1px solid black;
+}
+
+.editor-menu {
+    width: 340px;
+    border-right: 1px solid black;
+}
+
+.app-view-footer {
+    border-top: 1px solid black;
+}
+
+.navbar {
+    border-bottom: 1px solid black;
 }

@@ -1,7 +1,8 @@
 using rMind.App;
 
 var builder = WebApplication.CreateBuilder (args);
-builder.Services.AddRazorPages();
+builder.Services.AddRazorPages()
+    .AddRazorRuntimeCompilation();
 builder.Services.AddControllers();
 
 

@@ -2,6 +2,7 @@
   "dependencies": {
     "gulp": "4.0.2",
     "gulp-typescript": "6.0.0-alpha.1",
-    "typescript": "4.5.0-dev.20210904"
+    "typescript": "4.5.0-dev.20210904",
+    "bootstrap-icons": "1.5.0"
   }
 }
