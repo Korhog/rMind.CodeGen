@@ -1,8 +1,10 @@
 import * as render from './render/render.js';
 import { InputSystem, MouseAction } from './input.js';
 import { InteractiveNodeType } from './nodes/node.js';
-import { RowNode } from './nodes/rowNode.js';
+import { RowNode, RowDesc, RowIODesc } from './nodes/rowNode.js';
+import { HeaderRowNode } from './nodes/headerRowNode.js';
 import { NodeController } from './nodes/nodeController.js';
+import { Request } from './net/request.js';
 export class Engine {
     constructor(container) {
         this._container = container;
@@ -56,6 +58,34 @@ export class Engine {
         node.addRow();
         node.addRow();
         node.addRow();
+    }
+    createByGuid() {
+        Request.post("createnode", { descriptorId: "e7d6db39-956f-47d9-ba38-94a6f2ff9b3d" }, this.onCreateByGuidHandler.bind(this));
+    }
+    onCreateByGuidHandler(response) {
+        console.log(response);
+        const node = JSON.parse(response);
+        const type = node.type === "rMindHeaderRowContainer" ? HeaderRowNode : RowNode;
+        const container = this._rootController.create(type, 300, 300, { guid: node.guid, header: node.name });
+        if (node.rows) {
+            const rows = node.rows;
+            if (rows) {
+                rows.forEach((row) => {
+                    const rowDesc = new RowDesc();
+                    if (row.inPin) {
+                        rowDesc.input = new RowIODesc();
+                        rowDesc.input.label = row.inPin.label;
+                        rowDesc.input.rowSpan = row.inPin.rowSpan || 1;
+                    }
+                    if (row.outPin) {
+                        rowDesc.output = new RowIODesc();
+                        rowDesc.output.label = row.outPin.label;
+                        rowDesc.output.rowSpan = row.outPin.rowSpan || 1;
+                    }
+                    container.addRow(rowDesc);
+                });
+            }
+        }
     }
     createCanvas(container) {
         const canvas = document.createElement('canvas');

@@ -84,7 +84,7 @@ export class RowNode extends Node {
     addRow(desc?: RowDesc): void {
         const row = new Row();
         if (desc) {
-            // shoulr rebuild to NodeFactory
+            // should rebuild to NodeFactory
             if (desc.input) {
 
                 //if (desc.input.label) {

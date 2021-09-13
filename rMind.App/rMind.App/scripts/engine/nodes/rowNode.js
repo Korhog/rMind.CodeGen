@@ -59,7 +59,7 @@ export class RowNode extends Node {
     addRow(desc) {
         const row = new Row();
         if (desc) {
-            // shoulr rebuild to NodeFactory
+            // should rebuild to NodeFactory
             if (desc.input) {
                 //if (desc.input.label) {
                 //    row.input = new PinLabel(this, desc.inputDesc.label, rMindPinDirection.Input);

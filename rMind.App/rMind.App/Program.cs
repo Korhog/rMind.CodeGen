@@ -1,11 +1,11 @@
 using rMind.App;
+using rMind.Core;
 
 var builder = WebApplication.CreateBuilder (args);
 builder.Services.AddRazorPages()
     .AddRazorRuntimeCompilation();
 builder.Services.AddControllers();
-
-
+builder.Services.AddSingleton<IEngine, Engine>();
 
 var app = builder.Build();
 

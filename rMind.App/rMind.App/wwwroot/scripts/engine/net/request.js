@@ -14,9 +14,8 @@ export class Request {
      * @param params
      * @param load A callback function
      */
-    static Get(entryPoint, params, load) {
+    static get(entryPoint, params, load) {
         return __awaiter(this, void 0, void 0, function* () {
-            console.log(">> get");
             const xhr = new XMLHttpRequest();
             let param = "";
             if (params) {
@@ -30,6 +29,20 @@ export class Request {
                 };
             }
             xhr.send();
+        });
+    }
+    static post(entryPoint, body, load) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const xhr = new XMLHttpRequest();
+            xhr.open("POST", `api/${entryPoint}`, true);
+            if (load) {
+                xhr.onload = evt => {
+                    const response = xhr.responseText;
+                    load(response);
+                };
+            }
+            xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+            xhr.send(JSON.stringify(body));
         });
     }
     static parseParams(params) {
