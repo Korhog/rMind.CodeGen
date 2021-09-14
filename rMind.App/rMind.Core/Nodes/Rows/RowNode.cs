@@ -1,6 +1,4 @@
-﻿using Newtonsoft.Json;
-
-namespace rMind.Core.Nodes.Rows
+﻿namespace rMind.Core.Nodes.Rows
 {
     public class RowNode: Node
     {
@@ -11,9 +9,6 @@ namespace rMind.Core.Nodes.Rows
         /// </summary>
         public List<Row> Rows => _rows;
 
-        public RowNode()
-        {
-            Type = "rMindHeaderRowContainer";
-        }
+        public override string Type => "rMindHeaderRowContainer";
     }
 }

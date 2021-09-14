@@ -8,7 +8,7 @@
         /// <summary>
         /// Row type
         /// </summary>
-        public string Type { get; protected set; }
+        public virtual string Type => GetType().Name;
 
         public object ToJson()
         {
